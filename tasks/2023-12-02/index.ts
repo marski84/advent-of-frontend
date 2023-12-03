@@ -42,7 +42,6 @@ export class ChristmasQueue<T> {
     isEmpty(): boolean {
         return this.queue.length === 0
     }
-
 }
 
 
