@@ -23,6 +23,7 @@ export function memoize(fn: Function) {
     }
     let cache: {[key: string]: any} = {};
     
+    
     return function (...args: any) {
         let key = JSON.stringify(args);
         if (cache[key]) {
