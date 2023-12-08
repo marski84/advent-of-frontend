@@ -23,6 +23,7 @@ describe('LetterSorter', () => {
         ]);
     });
     
+    
     test('should sort letters by country', () => {
         const sorter = new LetterSorter(new CountryStrategy());
         
