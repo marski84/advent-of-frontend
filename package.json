@@ -2,8 +2,8 @@
   "name": "advent-of-frontend",
   "version": "0.0.1",
   "description": "Szablon dla zadań z opanujfrontend.pl/advent",
-  "main": "index.js",
 
+  "main": "index.js",
   "scripts": {
     "create": "node ./scripts/create-template.js",
     "test": "jest ./tasks/$(date +'%Y-%m-%d')/index.test.ts",
