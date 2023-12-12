@@ -7,47 +7,31 @@
 
 export async function conductInterviews(
     subjects: string[],
-    interview: (subject: string) => Promise<string>,
+    interview: (subject: string) => Promise<string | unknown>,
     timeConstraint: number
-): Promise<string[]> {
+) {
     if(!subjects || !interview || !timeConstraint) {
         throw new Error('No all neccesary data provided');
     }
-    
-    
     if(subjects.length === 0) {
         throw new Error('No subjects provided');
     }
-    
-    const result = subjects.map((subject) => interview(subject).then(
-        (message) => {
-          return message
-        }
+    const results = await Promise.all(subjects.map(subject =>
+        Promise.race([
+            new Promise((resolve, reject) =>
+                setTimeout(() => reject())
+            ),
+            interview(subject).catch(error => `Error: ${error.message}`)
+        ])
     ));
-    console.log(result)
     
-    setTimeout(() => {
-        console.log(result)
-    })
-    
-    
-    return new Promise((resolve, reject) => {
-        resolve(subjects.map(subject => {
-            return interview(subject).then((message) => {
-                return message
-            })
-        }))
-        reject('Error')
-        })
-    })
-    
-    
-    
+    return results;
 }
 
 
-const messages = ['Message1', 'Message2', 'Message3'];
-const processMessage = (message: string) => Promise.resolve(`Processed: ${message}`);
-const result = await conductInterviews(messages, processMessage, 100);
+// const messages = ['Message1', 'Message2', 'Message3'];
+// const processMessage = (message: string) => Promise.resolve(`Processed: ${message}`);
+// const result = await conductInterviews(messages, processMessage, 100);
+// console.log(result)
 // expect(result).toEqual(['Processed: Message1', 'Processed: Message2', 'Processed: Message3']);
 // expect(processMessage).toHaveBeenCalledTimes(3);

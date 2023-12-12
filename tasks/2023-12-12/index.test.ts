@@ -2,7 +2,8 @@ import { conductInterviews } from './index';
 
 test('main functionality - process multiple messages within timeout', async () => {
     const messages = ['Message1', 'Message2', 'Message3'];
-    const processMessage = jest.fn((message: string) => Promise.resolve(`Processed: ${message}`));
+    const processMessage = jest.fn((message: string) =>
+        Promise.resolve(`Processed: ${message}`));
     const result = await conductInterviews(messages, processMessage, 100);
     expect(result).toEqual(['Processed: Message1', 'Processed: Message2', 'Processed: Message3']);
     expect(processMessage).toHaveBeenCalledTimes(3);
