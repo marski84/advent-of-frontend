@@ -6,5 +6,26 @@
 // co znacznie przyspieszyłoby proces wyboru prezentów do dostarczenia.
 
 export function usePagination<T>(items: T[], itemsPerPage: number, pageNumber: number) {
-
+    if (items.length === 0 || itemsPerPage <= 0 || pageNumber <= 0) {
+        return {
+            currentPageItems: [] as T[],
+            totalPages: 0,
+            totalItems: 0
+        }
+    }
+    
+    const totalPages = Math.ceil(items.length / itemsPerPage);
+    const totalItems = items.length;
+    
+    
+    const currentPageItems = items.slice((pageNumber - 1) * itemsPerPage, pageNumber * itemsPerPage);
+    return {
+        currentPageItems: currentPageItems,
+        totalPages,
+        totalItems
+    }
 }
+
+
+// expect(currentPageItems).toEqual(["gift1", "gift2"]);
+usePagination(["gift1", "gift2", "gift3", "gift4"], 2, 2);

@@ -13,6 +13,9 @@ export class RateLimiter {
     private requests: number = 0;
     
     constructor(maxRequests: number, intervalMs: number) {
+        if (maxRequests <= 0 || intervalMs <= 0) {
+            throw new Error("maxRequests and intervalMs must be greater than 0");
+        }
         this.maxRequests = maxRequests;
         this.intervalMs = intervalMs;
     }
@@ -26,7 +29,7 @@ export class RateLimiter {
         
     }
     
-    addRequest() {
+    private addRequest() {
         this.requests += 1;
         setTimeout(
             () => {
