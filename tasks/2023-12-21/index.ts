@@ -8,9 +8,58 @@
 
 
 export class InjectionToken<T> {
+    constructor(public injectionIdentifier: string) {}
 }
 
 export class FactoryInjector {
 
+    private registry = new Map();
+    
+    registerClass<T>(blueprint: new () => T) {
+        if (!blueprint) {
+            throw new Error("No blueprint provided!");
+        }
+        this.registry.set(blueprint, blueprint)
+    }
+    
+    provideValue<T>(token: InjectionToken<T>, value: T) {
+        if (!token) {
+            throw new Error("No token provided!");
+        }
+        if (!value) {
+            throw new Error("No value provided!");
+        }
+        this.registry.set(token.injectionIdentifier, value);
+    }
+    
+    get<T>(injectedClassName: T): T {
+        const valueOrBlueprint = this.registry
+            .get(injectedClassName instanceof InjectionToken ? injectedClassName.injectionIdentifier : injectedClassName);
+        const blueprint= this.registry.get(injectedClassName)
+        
+        if (!valueOrBlueprint) {
+            throw new Error(`No value or blueprint found for ${injectedClassName}`);
+        }
+        
+        if (typeof blueprint === 'function'){
+            return new valueOrBlueprint()
+        }
+        return valueOrBlueprint
+    }
+    
+
 }
 
+const injector = new FactoryInjector();
+class SnowboardBlueprint {
+    brand = 'SnowX';
+}
+const TOKEN = new InjectionToken<string>('SPORT_GEAR');
+
+// injector.registerClass(SnowboardBlueprint);
+injector.provideValue(TOKEN, 'Gloves');
+
+
+
+const value = injector.get(TOKEN);
+// const a = injector.get(SnowboardBlueprint)

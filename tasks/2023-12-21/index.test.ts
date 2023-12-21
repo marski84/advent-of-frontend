@@ -8,10 +8,12 @@ test('main functionality - should retrieve standard blueprints for every worker'
     }
     injector.registerClass(SnowboardBlueprint);
     
+    // @ts-ignore
     const worker1Request = injector.get<SnowboardBlueprint>(SnowboardBlueprint);
     expect(worker1Request).toBeInstanceOf(SnowboardBlueprint);
     expect(worker1Request.brand).toBe('SnowX');
     
+    // @ts-ignore
     const worker2Request = injector.get<SnowboardBlueprint>(SnowboardBlueprint);
     expect(worker2Request).toBeInstanceOf(SnowboardBlueprint);
     expect(worker2Request.brand).toBe('SnowX');
