@@ -1,12 +1,32 @@
-// W ostatnim tygodniu przed Bożym Narodzeniem, Święty Mikołaj stanął przed niecodziennym wyzwaniem.
-// Pomocnicy Mikołaja zgłosili, że w centralnym systemie zarządzania listami życzeń dzieci nastąpił
-// ogromny wzrost ruchu. Na skutek tego, dostęp do bazy danych z życzeniami zagroził przeciążeniem systemu.
-// Święty Mikołaj postanowił, że potrzebny jest algoritm limitowania ruchu do systemu, aby każde dziecko miało
-// sprawiedliwą szansę na złożenie swojego zamówienia do Świętego. Algorytm miał gwarantować, że w określonej
-// jednostce czasu, tylko pewna liczba prób dostępu będzie przetwarzana, a wszystkie nadmiarowe próby zostaną odrzucone l
-// ub odłożone do późniejszego czasu. Właśnie ty, jako doświadczony inżynier oprogramowania, zostałeś poproszony,
-// byś zaprojektował i wdrożył niezawodny system limitowania ruchu, który zadba o równowagę obciążenia w systemie.
 
-export class RateLimiter {
+import { RateLimiter } from './index';
 
-}
+describe('RateLimiter', () => {
+    const maxRequests = 2;
+    const intervalMs = 1000;
+    let rateLimiter: RateLimiter;
+    
+    beforeEach(() => {
+        rateLimiter = new RateLimiter(maxRequests, intervalMs);
+    });
+    
+    test('allows sending requests under the rate limit', () => {
+        expect(rateLimiter.attemptAccess()).toBe(true);
+        expect(rateLimiter.attemptAccess()).toBe(true);
+    });
+    
+    test('blocks requests over the rate limit', () => {
+        rateLimiter.attemptAccess();
+        rateLimiter.attemptAccess();
+        expect(rateLimiter.attemptAccess()).toBe(false);
+    });
+    
+    test('allows requests again after the interval has passed', (done) => {
+        rateLimiter.attemptAccess();
+        rateLimiter.attemptAccess();
+        setTimeout(() => {
+            expect(rateLimiter.attemptAccess()).toBe(true);
+            done();
+        }, intervalMs + 50);
+    });
+});
