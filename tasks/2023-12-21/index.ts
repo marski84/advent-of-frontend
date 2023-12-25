@@ -8,7 +8,7 @@
 
 
 export class InjectionToken<T> {
-    constructor(public injectionIdentifier: string) {}
+    constructor(readonly injectionIdentifier: string) {}
 }
 
 export class FactoryInjector {

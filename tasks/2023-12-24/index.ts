@@ -8,11 +8,35 @@
 
 abstract class Component {
 
+    readonly style: string | null = null;
+    state: any;
+    
+    constructor(initialState?: any  , style?: string) {
+        if (initialState) {
+            this.state = initialState
+        }
+        if (style){
+            this.style = style
+        }
+    }
+    
+    
+
+    setState(componentState: any) {
+        this.state = componentState
+    }
+    
+    template(): string {
+        return ''
+    }
 }
 
 function renderComponent(component: Component): string {
+    return component.template();
 
 }
 
 export { Component, renderComponent };
+
+
 
