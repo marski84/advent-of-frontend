@@ -19,6 +19,47 @@ export const generateSchema = (schemaDefinition: JsonSchema): JsonSchema => {
     return schemaDefinition;
 };
 
+const hasRequiredProperties = (requiredProperties: string[], propertiesToValidate: Record<string, JsonSchema>) => {
+    const propertiesKeys = Object.keys(propertiesToValidate);
+    let isValid: boolean[] = [];
+    requiredProperties.forEach(requiredProperty => {
+       const isPresent = propertiesKeys.some(property => property === requiredProperty);
+       isValid.push(isPresent)
+    })
+    return isValid.every(isPresent => isPresent);
+}
+
 export const validate = (schema: JsonSchema, jsonObject: any): boolean => {
+    const requiredProperties = schema.required || [];
+    const propertiesToValidate = schema.properties || {};
+    
+    const hasValidProperties = hasRequiredProperties(requiredProperties, jsonObject);
+    if (!hasValidProperties) {
+        return false;
+    }
     return true;
 };
+
+const schema = generateSchema({
+    type: "object",
+    properties: {
+        name: { type: "string" },
+        age: { type: "number" },
+        wishlist: { type: "array", items: { type: "string" } }
+    },
+    required: ["name", "age", "wishlist"]
+});
+
+const validObject = {
+    name: "Alice",
+    age: 10,
+    wishlist: ["Doll", "Book", "Puzzle"]
+};
+
+const invalidObject = {
+    name: "Bob",
+    wishlist: ["Train", "Ball"]
+};
+
+// const result = validate(schema, invalidObject);
+// console.log(result)
